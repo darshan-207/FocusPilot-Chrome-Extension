@@ -1,153 +1,226 @@
-# Productive vs Unproductive Web Classifier
+# 🧠 Productive vs Unproductive Web Classifier
 
-A browser extension and local NLP inference service that classifies any visited webpage — including YouTube, streaming sites, long articles, and dynamically loaded content — as productive or unproductive.  
+> **A real-time browser intelligence system that knows whether you're learning or procrastinating — before you do.**
 
-This project combines a fully custom-trained DistilBERT model with a real-time Chrome extension that scrapes page text, sends it to a local FastAPI backend, and displays instant classification results.
-
----
-
-## Features
-
-### • Full-site text extraction
-Extracts text from:
-- Standard websites
-- Infinite-scroll pages
-- Streaming platforms
-- YouTube (via transcript or DOM parsing)
-- Dynamically loaded content
-
-### • Local Transformer inference
-- Fine-tuned DistilBERT binary classifier
-- Local FastAPI server (no cloud, no limits)
-- Fast inference using PyTorch + safetensors
-
-### • Chrome extension (Manifest V3)
-- Scrapes active tab content
-- Sends text to local API
-- Displays productivity scores with a clean UI
-- Tracks tab usage time
-- Stores last classification results
-
-### • Custom dataset
-Built from:
-- Wikipedia educational pages  
-- Reddit entertainment feeds  
-- YouTube transcripts (250+ per class)  
-- Cleaned, filtered, balanced binary dataset  
+An AI-powered Chrome extension that classifies every webpage you visit using a custom-trained DistilBERT model running entirely on your machine. No cloud. No tracking. Just instant, honest feedback about your digital habits.
 
 ---
 
-## Architecture
+## ✨ What Makes This Different
 
-Browser Tab → Content Script → Extracted Text → Chrome Extension UI
-↓
-Local HTTP POST
-↓
-FastAPI Model Server
-↓
-DistilBERT Classification
-↓
-Productive / Unproductive
+This isn't just another productivity timer. It's a **semantic understanding engine** that reads the actual content of what you're consuming — YouTube transcripts, infinite-scroll feeds, long-form articles, streaming platforms — and tells you whether it aligns with your goals.
 
-yaml
-Copy code
+**The result?** Real-time awareness of how you spend your attention.
 
 ---
 
-## Local Setup
+## 🎯 Features
 
-### 1. Clone Repository
+### 🔍 **Intelligent Content Extraction**
+Extracts meaningful text from virtually any web page:
+- **Standard websites** — articles, blogs, documentation
+- **Infinite-scroll feeds** — social media, news aggregators
+- **Video platforms** — YouTube transcripts and DOM parsing
+- **Streaming sites** — content metadata and descriptions
+- **Dynamic SPAs** — React, Vue, Angular applications
+
+### 🤖 **Local Transformer Inference**
+- Fine-tuned **DistilBERT** binary classifier (productive vs. unproductive)
+- Runs on a **local FastAPI server** — your data never leaves your machine
+- Fast PyTorch inference with optimized **safetensors** format
+- No API keys, no rate limits, no compromises
+
+### 🎨 **Chrome Extension (Manifest V3)**
+- **One-click classification** of any active tab
+- Clean, minimal UI with instant productivity scores
+- **Tab usage tracking** — see how long you've been on each page
+- **Persistent history** — stores your last classifications locally
+- Built with modern Chrome Extension standards
+
+### 📊 **Custom Training Dataset**
+Trained on a carefully curated, balanced dataset:
+- **Wikipedia** educational pages (500+ articles)
+- **Reddit** entertainment feeds (250+ threads)
+- **YouTube** transcripts (250+ videos per class)
+- Cleaned, tokenized, and balanced for optimal performance
+
+---
+
+## 🏗️ Architecture
+
+```
+┌─────────────┐
+│ Browser Tab │
+└──────┬──────┘
+       │ (scrapes content)
+       ▼
+┌──────────────────┐
+│  Content Script  │
+└──────┬───────────┘
+       │ (extracts text)
+       ▼
+┌──────────────────┐
+│  Extension UI    │
+└──────┬───────────┘
+       │ (HTTP POST)
+       ▼
+┌──────────────────┐
+│ FastAPI Server   │
+│  localhost:9000  │
+└──────┬───────────┘
+       │ (inference)
+       ▼
+┌──────────────────┐
+│ DistilBERT Model │
+└──────┬───────────┘
+       │
+       ▼
+   📈 Result:
+   Productive / Unproductive
+```
+
+---
+
+## 🚀 Quick Start
+
+### **1. Clone the Repository**
+
+```bash
 git clone https://github.com/<yourusername>/<repo-name>
 cd <repo-name>
+```
 
-shell
-Copy code
+### **2. Install Backend Dependencies**
 
-### 2. Install Backend Dependencies
+```bash
 pip install -r requirements.txt
+```
 
-shell
-Copy code
+> **Requirements:** Python 3.8+, PyTorch, Transformers, FastAPI, Uvicorn
 
-### 3. Start FastAPI Server
+### **3. Start the FastAPI Server**
+
+```bash
 uvicorn app:app --host 0.0.0.0 --port 9000
+```
 
-arduino
-Copy code
-
-Server will run at:
-http://localhost:9000/predict
-
-yaml
-Copy code
+✅ **Server running at:** `http://localhost:9000/predict`
 
 ---
 
-## Testing API
+## 🧪 Test the API
 
-curl -X POST "http://localhost:9000/predict"
--H "Content-Type: application/json"
--d '{"text": "I studied machine learning today"}'
+```bash
+curl -X POST "http://localhost:9000/predict" \
+  -H "Content-Type: application/json" \
+  -d '{"text": "I studied machine learning algorithms and neural networks today"}'
+```
 
-yaml
-Copy code
+**Expected Response:**
 
-Expected response:
+```json
 {
-"productive": 0.94,
-"unproductive": 0.06
+  "productive": 0.94,
+  "unproductive": 0.06
 }
-
-yaml
-Copy code
+```
 
 ---
 
-## Chrome Extension Setup
+## 🎨 Install Chrome Extension
 
-1. Go to `chrome://extensions/`
-2. Enable Developer Mode
-3. Click "Load unpacked"
-4. Select the `gl_ext` folder
-5. Keep FastAPI server running
+1. Navigate to `chrome://extensions/`
+2. Enable **Developer Mode** (top-right toggle)
+3. Click **"Load unpacked"**
+4. Select the `gl_ext/` folder from this repository
+5. **Keep the FastAPI server running** in the background
+
+🎉 **You're ready!** Click the extension icon on any page to see its productivity score.
 
 ---
 
-## Folder Structure
+## 📁 Project Structure
 
+```
 repo/
 │
-├── app.py # FastAPI backend
-├── requirements.txt
-├── model/ # DistilBERT model files
-│ ├── config.json
-│ ├── model.safetensors
-│ ├── tokenizer.json
-│ └── vocab.txt
+├── app.py                    # FastAPI inference server
+├── requirements.txt          # Python dependencies
 │
-├── gl_ext/ # Chrome Extension
-│ ├── manifest.json
-│ ├── popup.html
-│ ├── popup.js
-│ ├── background.js
-│ ├── content.js
-│ └── icons/
+├── model/                    # Fine-tuned DistilBERT model
+│   ├── config.json
+│   ├── model.safetensors
+│   ├── tokenizer.json
+│   └── vocab.txt
 │
-└── README.md
-
-yaml
-Copy code
+├── gl_ext/                   # Chrome Extension (Manifest V3)
+│   ├── manifest.json         # Extension configuration
+│   ├── popup.html            # UI interface
+│   ├── popup.js              # UI logic
+│   ├── background.js         # Service worker
+│   ├── content.js            # Page content extraction
+│   └── icons/                # Extension icons
+│
+└── README.md                 # You are here
+```
 
 ---
 
-## Why I Built This
+## 💡 Why This Exists
 
-Understanding the quality of digital consumption is complicated.  
-This tool makes it measurable.
+**Digital consumption is invisible.**
 
-By combining NLP, browser scripting, and real-time content extraction, this project becomes an always-on reflection of how productive my browsing behavior actually is.
+You can track screen time, block websites, and set timers — but none of that tells you whether what you're reading is actually valuable. This tool changes that.
+
+By combining:
+- **Natural Language Processing** — understanding semantic content
+- **Browser automation** — real-time page scraping
+- **Local inference** — privacy-first, zero-latency classification
+
+...this project becomes an **always-on mirror** of your digital behavior.
+
+It's not about judgment. It's about **awareness**.
 
 ---
 
-## License
-MIT
+## 🔮 Future Enhancements
+
+- [ ] **Per-category breakdown** (learning, entertainment, news, social)
+- [ ] **Daily productivity reports** with charts
+- [ ] **Focus mode** — auto-block unproductive sites
+- [ ] **Ollama integration** — run Llama 3 for even smarter classification
+- [ ] **Mobile support** — Android/iOS companion apps
+
+---
+
+## 🤝 Contributing
+
+Pull requests welcome! If you have ideas for:
+- Better content extraction methods
+- Improved model architectures
+- UI/UX enhancements
+- Dataset expansion
+
+...open an issue or submit a PR.
+
+---
+
+## 📄 License
+
+MIT License — feel free to fork, modify, and build on this project.
+
+---
+
+## 🙏 Acknowledgments
+
+Built with:
+- **Hugging Face Transformers** — model training and inference
+- **FastAPI** — high-performance API framework
+- **Chrome Extensions API** — browser integration
+- **PyTorch** — deep learning backbone
+
+---
+
+**Made with curiosity, caffeine, and a desire to understand where attention really goes.**
+
+⭐ **Star this repo if it helped you understand your browsing habits better.**
